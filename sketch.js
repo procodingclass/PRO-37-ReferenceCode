@@ -1,13 +1,16 @@
-const { PRIORITY_BELOW_NORMAL } = require("constants");
 
-var box;
 
-//SA Will write these two variables
-var boxpos;
+var dog;
+
+//Student will write this
+var dogpos;
 var database;
+var position;
 
 function preload(){
-    ludo=loadImage("background.jpg")
+    backdrop=loadImage("background.jpg");
+    dogimg=loadAnimation("dog1.png","dog2.png","dog3.png");
+    foodimg=loadImage("hotdog.png");
 }
 function setup(){
     
@@ -17,22 +20,29 @@ function setup(){
     //Initialise Databbase
     database = firebase.database();
 
-    box=createSprite(200,200,100,100);
-    box.shapeColor= "red";
+    dog=createSprite(200,200,100,100);
+
+    dog.addAnimation("running",dogimg);
+    dog.scale=0.5;
+    food=createSprite(450,450);
+    food.addImage(foodimg);
+    food.scale=0.5;
 
     // .ref() and .on
-    boxpos = database.ref("box/position");
-    boxpos.on("value",readposition);
+    dogpos = database.ref("dog/position");
+    dogpos.on("value",readposition);
 
 }
 
 function draw(){
-    background(ludo);
+    background(backdrop);
+    
     if(keyDown(LEFT_ARROW)){
         changePosition(-1,0);
     }
     else if(keyDown(RIGHT_ARROW)){
         changePosition(1,0);
+       
     }
     else if(keyDown(UP_ARROW)){
         changePosition(0,-1);
@@ -44,8 +54,8 @@ function draw(){
 }
 
 function changePosition(x,y){
-    box.x = box.x + x;
-    box.y = box.y + y;
+    dog.x = dog.x + x;
+    dog.y = dog.y + y;
 }
 
 
@@ -53,6 +63,6 @@ function changePosition(x,y){
 function readposition(data){
     position = data.val()
     console.log(position)
-    box.x = position.x;
-    box.y = position.y;
+    dog.x = position.x;
+    dog.y = position.y;
 }
